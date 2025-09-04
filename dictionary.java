@@ -1,138 +1,99 @@
-import java.util.Scanner;
+import java.util.*;
 
-// Node structure for each word in the dictionary
-class Node {
+class WordEntry {
     String word;
     String meaning;
-    Node next;
 
-    Node(String word, String meaning) {
+    WordEntry(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
-        this.next = null;
     }
 }
 
 public class PersonalDictionary {
-    private Node head = null;
+    private LinkedList<WordEntry> dictionary = new LinkedList<>();
     private Scanner scanner = new Scanner(System.in);
 
-    // Insert a new word in alphabetical order
+    // Insert in alphabetical order
     public void insertWord() {
         System.out.print("Enter the word: ");
         String word = scanner.nextLine();
         System.out.print("Enter the meaning: ");
         String meaning = scanner.nextLine();
 
-        Node newNode = new Node(word, meaning);
+        WordEntry newEntry = new WordEntry(word, meaning);
 
-        if (head == null || word.compareToIgnoreCase(head.word) < 0) {
-            newNode.next = head;
-            head = newNode;
+        if (dictionary.isEmpty()) {
+            dictionary.add(newEntry);
         } else {
-            Node current = head;
-            while (current.next != null && current.next.word.compareToIgnoreCase(word) < 0) {
-                current = current.next;
+            int i = 0;
+            while (i < dictionary.size() &&
+                   dictionary.get(i).word.compareToIgnoreCase(word) < 0) {
+                i++;
             }
-            newNode.next = current.next;
-            current.next = newNode;
+            dictionary.add(i, newEntry);
         }
         System.out.println("Word inserted successfully!");
     }
 
-    // Delete a word from the dictionary
+    // Delete a word
     public void deleteWord() {
-        if (head == null) {
-            System.out.println("Dictionary is empty!");
-            return;
-        }
-
         System.out.print("Enter the word to delete: ");
         String target = scanner.nextLine();
 
-        Node current = head, previous = null;
-
-        while (current != null && !current.word.equalsIgnoreCase(target)) {
-            previous = current;
-            current = current.next;
-        }
-
-        if (current == null) {
-            System.out.println("Word not found!");
-        } else {
-            if (previous == null) {
-                head = current.next;
-            } else {
-                previous.next = current.next;
-            }
+        boolean removed = dictionary.removeIf(entry -> entry.word.equalsIgnoreCase(target));
+        if (removed) {
             System.out.println("Word deleted successfully!");
+        } else {
+            System.out.println("Word not found!");
         }
     }
 
-    // Update the meaning of a word
+    // Update meaning
     public void updateMeaning() {
-        if (head == null) {
-            System.out.println("Dictionary is empty!");
-            return;
-        }
-
         System.out.print("Enter the word to update: ");
         String target = scanner.nextLine();
 
-        Node current = head;
-        while (current != null && !current.word.equalsIgnoreCase(target)) {
-            current = current.next;
+        for (WordEntry entry : dictionary) {
+            if (entry.word.equalsIgnoreCase(target)) {
+                System.out.print("Enter the new meaning: ");
+                entry.meaning = scanner.nextLine();
+                System.out.println("Meaning updated successfully!");
+                return;
+            }
         }
-
-        if (current == null) {
-            System.out.println("Word not found!");
-        } else {
-            System.out.print("Enter the new meaning: ");
-            current.meaning = scanner.nextLine();
-            System.out.println("Meaning updated successfully!");
-        }
+        System.out.println("Word not found!");
     }
 
-    // Display all words
+    // Display
     public void displayDictionary() {
-        if (head == null) {
+        if (dictionary.isEmpty()) {
             System.out.println("Dictionary is empty!");
             return;
         }
-
         System.out.println("\n--- Dictionary Contents ---");
-        Node current = head;
-        while (current != null) {
-            System.out.println("Word: " + current.word);
-            System.out.println("Meaning: " + current.meaning + "\n");
-            current = current.next;
+        for (WordEntry entry : dictionary) {
+            System.out.println("Word: " + entry.word);
+            System.out.println("Meaning: " + entry.meaning + "\n");
         }
     }
 
-    // Search for a word
+    // Search
     public void searchWord() {
-        if (head == null) {
-            System.out.println("Dictionary is empty!");
-            return;
-        }
-
         System.out.print("Enter the word to search for: ");
         String target = scanner.nextLine();
 
-        Node current = head;
-        while (current != null && !current.word.equalsIgnoreCase(target)) {
-            current = current.next;
+        for (WordEntry entry : dictionary) {
+            if (entry.word.equalsIgnoreCase(target)) {
+                System.out.println("Word: " + entry.word);
+                System.out.println("Meaning: " + entry.meaning);
+                return;
+            }
         }
-
-        if (current == null) {
-            System.out.println("Word not found!");
-        } else {
-            System.out.println("Word: " + current.word);
-            System.out.println("Meaning: " + current.meaning);
-        }
+        System.out.println("Word not found!");
     }
 
-    // Display menu
+    // Menu
     private void displayMenu() {
         System.out.println("\n--- Personal Dictionary Menu ---");
         System.out.println("1. Insert a new word");
@@ -157,32 +118,18 @@ public class PersonalDictionary {
             }
 
             switch (choice) {
-                case 1:
-                    insertWord();
-                    break;
-                case 2:
-                    deleteWord();
-                    break;
-                case 3:
-                    updateMeaning();
-                    break;
-                case 4:
-                    displayDictionary();
-                    break;
-                case 5:
-                    searchWord();
-                    break;
-                case 6:
-                    System.out.println("Exiting the program.");
-                    return;
-                default:
-                    System.out.println("Invalid choice! Please try again.");
+                case 1: insertWord(); break;
+                case 2: deleteWord(); break;
+                case 3: updateMeaning(); break;
+                case 4: displayDictionary(); break;
+                case 5: searchWord(); break;
+                case 6: System.out.println("Exiting..."); return;
+                default: System.out.println("Invalid choice!");
             }
         }
     }
 
     public static void main(String[] args) {
-        PersonalDictionary dict = new PersonalDictionary();
-        dict.run();
+        new PersonalDictionary().run();
     }
 }
