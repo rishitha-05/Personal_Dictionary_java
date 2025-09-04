@@ -1,6 +1,6 @@
-# Personal Dictionary (Java)
+# Personal Dictionary (Java - LinkedList Version)
 
-A simple console-based **Personal Dictionary** application implemented in Java using a singly linked list.  
+A simple console-based **Personal Dictionary** application implemented in Java using the built-in `LinkedList` class.  
 This project allows users to **insert, delete, update, display, and search** for words along with their meanings.
 
 ---
@@ -16,11 +16,10 @@ This project allows users to **insert, delete, update, display, and search** for
 ---
 
 ## 🛠️ Technologies Used
-- **Java** (Core Java, Collections not used – implemented with custom linked list)
+- **Java** (Core Java, `java.util.LinkedList`)
 - **Scanner** for user input
 
 ---
-
 --- Personal Dictionary Menu ---
 1. Insert a new word
 2. Delete a word
@@ -30,6 +29,12 @@ This project allows users to **insert, delete, update, display, and search** for
 6. Exit
 
 Enter your choice: 1
-Enter the word: Java
+Enter the word: Python
 Enter the meaning: A programming language
 Word inserted successfully!
+
+Enter your choice: 4
+
+--- Dictionary Contents ---
+Word: Python
+Meaning: A programming language
